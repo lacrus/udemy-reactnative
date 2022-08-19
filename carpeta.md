@@ -58,7 +58,7 @@ muestra algunos comandos que podemos usar
 
 ### clase 7 - analizando el proyecto creado
 
-- dentro del proyecto la unica diferencia con reac es el archivo app.json que son configuracion de la aplicacion.. se ve mas adelante
+- dentro del proyecto la unica diferencia con react es el archivo app.json que son configuracion de la aplicacion.. se ve mas adelante
 
 ### clase 8
 
@@ -70,7 +70,7 @@ escanear el QR que sale en la terminal
 ### clase 9
 
 podemos descargar un simulador para ver en tiempo real la app en android o ios
-windows - podemos descargr uin simulador para android.. no hay simulador para ios, para eso si o si tenemos que tener un iphone y usar la app de expo
+windows - podemos descargr un simulador para android.. no hay simulador para ios, para eso si o si tenemos que tener un iphone y usar la app de expo
 simulador android p' windows -> https://developer.android.com/studio
 
 ### ACERCA DEL CURSO
@@ -186,14 +186,87 @@ import {StatusBar } from "expo-status-bar"
 manejo errores
 devTools
 
-## clase 42 - terminal
+### clase 42 - terminal
+
 ? signo pregunta nos muestra el menu
 m abre la "terminal" en el celular
 
-## clase 43 - devTools
+### clase 43 - devTools
+
 npm install -g react-devtools
 
 ejecutamos react-devtools en la terminal.. esto abre una ventana
 abrimos el menu de desarrollo en el cel -> temminal ? => m
 y en el menu ponemos debug remote js -> esto conecta con la ventana que se abrio
 y ya tenemos las herramientas de react disponibles
+
+## Seccion 4
+
+### clase 49 - sombras
+
+Android
+propiedad { elevation: numeroEntero } mientras mas alto el numero mas elevacion... mas sombra
+
+Ios - usa 4 propiedades diferentes que se pueden configurar
+shadowColor
+shadowOffset -> { width: 0, height: 2} -> cuantos px se expande a la derecha y abajo
+shadowOpacity -> transparencia de la sombra 0 a 1
+shadowRadius -> cuanto la sombra se expande -> num redondo 0 1 2 3 4
+
+### clase 50 - TextInput
+
+propiedades principales que admite
+
+- maxLength={2}
+- keyboardType="number-pad" -> tipo de teclado que se abre
+- autoCapitalize="none" -> que no ponga primera letra mayuscula
+- autoCorrect={false} -> para poner mails que no los corrija
+
+### clase 52 - BOTONES
+
+efecto RIPPLE -> clase 32 tmb esta
+
+android
+
+- android_ripple={{ color: "#640233" }} => efecto ripple
+
+Ios
+-> hay que crear un estilo especial para cuando el boton este presionado
+pressed: {
+opacity: 0.75
+}
+-> al atributo style lo utilizamos como funcion!!
+style={({ pressed }) =>
+pressed
+? [styles.buttonInnerContainer, styles.pressed] ==>>>>> para agregar multiples atributos usamos un array!!
+: styles.buttonInnerContainer
+}
+
+### clase 54 - FONDOS
+
+podemos aplicar un fondo global a la app en app.json agregando la propiedad "expo": {"backgroundColor": color"}
+
+- GRADIENTES
+  expo tiene una dependencia que permite trabajar con gradientes
+  expo install expo-linear-gradient
+
+### clase 56 - backgroun image
+
+ImageBackground -> componente de react-native
+<ImageBackground
+source={imagenFondo}
+resizeMode="cover"
+style={styles.rootScreen}
+imageStyle={{backgroundImage:{opacity: 0.15,}}} >
+<OtroComponente/>
+</ImageBackground>
+
+### clase 58 - ALERTAS
+
+importamos Alert de react-native -> pero no es un componente
+Alert es Objeto que contiene metodos.. contiene .alert Alert.alert()
+Alert.prompt() -> podemos ingresar un valor
+
+Alert.alert("Titulo", "Mensaje", [{
+text: "Okay", style: "destructive/cancel/default", onPress: (acepta una funcion que podemos hacer al presionar ese boton)
+}]) -> 3° parametro es un array por cada index un objeto que es cada boton de la alerta
