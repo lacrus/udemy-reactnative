@@ -1,4 +1,13 @@
-import { StyleSheet, TextInput, View, Alert, Text } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  Alert,
+  Dimensions,
+  useWindowDimensions,
+  KeyboardAvoidingView,
+  ScrollView,
+} from "react-native";
 import { useState } from "react";
 
 import PrimaryButton from "../components/ui/PrimaryButton";
@@ -10,6 +19,8 @@ import Buttons from "../components/ui/Buttons";
 
 export default function StartGameScreen({ onPickNumber }) {
   const [enteredNumber, setEnteredNumber] = useState("");
+
+  const { width, height } = useWindowDimensions();
 
   function numberInputHandler(enteredText) {
     setEnteredNumber(enteredText);
@@ -32,34 +43,44 @@ export default function StartGameScreen({ onPickNumber }) {
     }
     onPickNumber(chosenNumber);
   }
+  const marginTopDistance = height < 380 ? 30 : 100;
 
   return (
-    <View style={styles.rootContainer}>
-      <Title>Adivina mi número</Title>
-      <Card>
-        <InstructionText>Ingresa un número</InstructionText>
-        <TextInput
-          style={styles.numberInput}
-          maxLength={2}
-          keyboardType="number-pad"
-          value={enteredNumber}
-          onChangeText={numberInputHandler}
-        />
-        <Buttons
-          textButtonLeft={"Reset"}
-          textButtonRigth={"Confirm"}
-          onPressButtonLeft={resetInputHandler}
-          onPressButtonRight={confirmInputHandler}
-        />
-      </Card>
-    </View>
+    <ScrollView style={styles.screen}>
+      <KeyboardAvoidingView style={styles.screen} behavior="position">
+        <View style={[styles.rootContainer, { marginTop: marginTopDistance }]}>
+          <Title>Adivina mi número</Title>
+          <Card>
+            <InstructionText>Ingresa un número</InstructionText>
+            <TextInput
+              style={styles.numberInput}
+              maxLength={2}
+              keyboardType="number-pad"
+              value={enteredNumber}
+              onChangeText={numberInputHandler}
+            />
+            <Buttons
+              textButtonLeft={"Reset"}
+              textButtonRigth={"Confirm"}
+              onPressButtonLeft={resetInputHandler}
+              onPressButtonRight={confirmInputHandler}
+            />
+          </Card>
+        </View>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
 
+// const altoPantalla = Dimensions.get("screen").height;
+
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+  },
   rootContainer: {
     flex: 1,
-    marginTop: 100,
+    // marginTop: altoPantalla < 380 ? 30 : 100,
     alignItems: "center",
   },
   numberInput: {

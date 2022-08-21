@@ -326,3 +326,59 @@ LOADING
 instalamos paquete -->>> expo install expo-app-loading
 importamos paquete -->>> import AppLoading from "expo-app-loading"
 y usamos loading junto con fonts
+
+## Seccion 5 - RESPONSIVE
+
+seguimos trabajando en la app de la seccion 4
+
+### clase 81 - Dimensions
+
+import {Dimensions} from "react-native
+es un Objeto.. como Alert que podemos obtener las dimensiones del dispositivo
+
+const anchoDispositivo = Dimensions.get("screen/window").width => en ios no hay diferencia.. en androis screen es todo.. windows es sin la barra de estado
+
+entonces dsp lo usamos en el stylesheet.create como x ej -> padding: anchoDispositivo < 450 ? 12 : 24,
+
+### clase 83 - ROTACION
+
+app.json en "orientation": "portrait" -> configuracion incial de la app en vertical
+
+para desbloquear ponemos en "default"
+el otro es "landscape" -> horizontal
+
+RESPONSIVE dinamico!
+usando dimension no se refresca la informacion x ej si rotamos la pantalla.. entonces podemos usar el hook ->
+
+HOOK useWindowDimensions -> importamos de "react-native"
+
+luego dentro del componente lo destructuramos -> const {width, height } = useWindowDimensions()
+const marginTopDistance = height < 380 ? 10 : 100
+
+y agregamos la propiedad a style como array
+<View style={[styles.rootContainer, { marginTop: marginTopDistance }]}>
+
+### clase 85 - TECLADO
+
+import {KeyboardAvoidingView} from "react-native"
+envolvemos la vista que queramos se vaya para arriba cuando abrimos teclado
+
+<ScrollView> -> envolvemos en un scroll por si las dudas
+<KeyboardAvoidingView style={styles.screen} behavior="position">
+</KeyboardAvoidingView>
+</ScrollView>
+
+### clase 88 - PLATAFORMAS
+
+import {Platform} from "react-native" -> no es un ajuste dinamico por no cambia!!
+
+entonces lo podemos usar dentro del StylesSheet.create
+
+lo mas facil => borderWidth: Platform.OS === "android" ? 2 : 0,
+lo mas ideal => borderWidth: Platform.select({ ios: 0, android: 2 }),
+otro ideal => crear dos archivos separados ej title.ios.js y title.android.js y aplicar los estilos para la plataforma segun el archivo que sea
+
+### clase 89 - Status bar
+
+import {StatusBar } from "expo-status-bar"
+lo usamos preferiblemente en el archivo raiz y podemos darle estilo claro u obscuro ====>> <StatusBar style="light" />

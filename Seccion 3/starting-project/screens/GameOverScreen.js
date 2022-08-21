@@ -1,4 +1,12 @@
-import { View, Image, StyleSheet, Text } from "react-native";
+import {
+  View,
+  Image,
+  StyleSheet,
+  Text,
+  ScrollView,
+  Dimensions,
+  useWindowDimensions,
+} from "react-native";
 import Title from "../components/ui/Title";
 import imagen from "../assets/img/success.png";
 import Colors from "../constants/colors";
@@ -9,28 +17,51 @@ export default function GameOverScreen({
   userNumber,
   onStartNewGame,
 }) {
+  const { width, height } = useWindowDimensions();
+
+  if (width < 380) {
+    imageSize = 150;
+  }
+
+  if (height < 400) {
+    imageSize = 80;
+  }
+
+  const imageStyle = {
+    width: imageSize,
+    height: imageSize,
+    borderRadius: imageSize / 2,
+  };
+
   return (
-    <View style={styles.rootContainer}>
-      <Title>Fin del Juego!</Title>
-      <View style={styles.imageContainer}>
-        <Image style={styles.image} source={imagen} />
+    <ScrollView style={styles.screen}>
+      <View style={styles.rootContainer}>
+        <Title>Fin del Juego!</Title>
+        <View style={[styles.imageContainer, imageStyle]}>
+          <Image style={styles.image} source={imagen} />
+        </View>
+        <View>
+          <Text style={styles.symmaryText}>
+            Tu telefono necesito{" "}
+            <Text style={styles.highlight}>{roundsNumber}</Text> cantidad de
+            rondas para adivinar el numero{" "}
+            <Text style={styles.highlight}>{userNumber}</Text>
+          </Text>
+        </View>
+        <View>
+          <PrimaryButton onPress={onStartNewGame}>Nuevo Juevo</PrimaryButton>
+        </View>
       </View>
-      <View>
-        <Text style={styles.symmaryText}>
-          Tu telefono necesito{" "}
-          <Text style={styles.highlight}>{roundsNumber}</Text> cantidad de
-          rondas para adivinar el numero{" "}
-          <Text style={styles.highlight}>{userNumber}</Text>
-        </Text>
-      </View>
-      <View>
-        <PrimaryButton onPress={onStartNewGame}>Nuevo Juevo</PrimaryButton>
-      </View>
-    </View>
+    </ScrollView>
   );
 }
 
+// const anchoPantalla = Dimensions.get("window").width;
+
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+  },
   rootContainer: {
     flex: 1,
     padding: 24,
@@ -38,9 +69,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   imageContainer: {
-    width: 300,
-    height: 300,
-    borderRadius: 150,
+    // width: anchoPantalla < 380 ? 200 : 300,
+    // height: anchoPantalla < 380 ? 200 : 300,
+    // borderRadius: anchoPantalla < 380 ? 100 : 150,
     borderWidth: 3,
     borderColor: Colors.primary800,
     overflow: "hidden",
