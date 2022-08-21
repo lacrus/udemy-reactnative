@@ -270,3 +270,59 @@ Alert.prompt() -> podemos ingresar un valor
 Alert.alert("Titulo", "Mensaje", [{
 text: "Okay", style: "destructive/cancel/default", onPress: (acepta una funcion que podemos hacer al presionar ese boton)
 }]) -> 3° parametro es un array por cada index un objeto que es cada boton de la alerta
+
+### SafeAreaView -> area superior de cada telefono
+
+importamos el componente desde react-native -> PONERLE ESTILO flex 1 para pantalla completa
+<SafeAreaView style={styles.rootScreen}>{screen}</SafeAreaView>
+
+### clase 63 - colores
+
+al no tener disponible css y sus variables, podemos crear un archivo con todas aquellas constantes.
+
+### clase 68 - simular CSS cascade
+
+el en el elemento que queremos aplicar los estilos le agregamos una prop { style } y luego la usamos dentro del style del mismo componente ej:
+
+export default function InstructionText({ children, style }) { // <---- este style lo pasamos como props
+return <Text style={[styles.instructionText, style]}>{children}</Text>; //<---- dsp lo usamos dentro de style como array!!!!
+}
+
+### clase 69 - ICONOS
+
+EXPO viene con sus propios iconos -> import { Ionicons } from "@expo/vector-icons"
+y lo usamos como componente donde queramos
+<Ionicons name="md-add" size={24} color="white" />
+
+### clase 70 - FUENTES LETRAS FONTS - LOADING
+
+es un paquete a instalar -> expo install expo-font
+->podemos utilizar las fuentes de google muy facil (ver documentacion)
+sino podemos descargar fuentes y agregarlas a una carpeta y luego usarlas con useFonts() en el archivo raiz
+
+import { useFonts } from "expo-font"; -> en App.js o archivo raiz
+
+useFonts({
+"open-sans" : require("./asset)
+})
+
+a su vez useFonts es como useState => es un array que el primer parametro nos dice si las fuentes estan cargadas o no.. y esto lo podemos usar como setLoading
+const [fontsLoaded] = useFonts({
+"open-sans" : require("./asset.....)
+"open-sans-bold" : require("./asset....)
+})
+
+if (!fontsLoaded) {
+return <AppLoading> // ==>>> AppLoading lo instalamos --> ver adelante
+}
+
+en ->
+const styles = StyleSheet.create({
+title: {
+fontFamily: "open-sans-bold", -> como lo establecimos en el useFonts
+}
+
+LOADING
+instalamos paquete -->>> expo install expo-app-loading
+importamos paquete -->>> import AppLoading from "expo-app-loading"
+y usamos loading junto con fonts
