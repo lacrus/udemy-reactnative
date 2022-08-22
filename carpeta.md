@@ -148,6 +148,7 @@ FLATLIST -> se usa para optimizar las listas.. solo carga la informacion que se 
 
 <FlatList
 data={ [1, 2, 3, 4] } // => es la informacion que se va a "mapear"
+keyExtractor={(i) => i}
 renderItem={(i) => { // => es la funcion "mapeadora" que va a ir renderizando lso elementos
 i.index;
 return (
@@ -382,3 +383,210 @@ otro ideal => crear dos archivos separados ej title.ios.js y title.android.js y 
 
 import {StatusBar } from "expo-status-bar"
 lo usamos preferiblemente en el archivo raiz y podemos darle estilo claro u obscuro ====>> <StatusBar style="light" />
+
+## SECCION 6 - NAVIGATION NAVEGACION
+
+navigation stack ???
+
+### clase 93 - flatlist
+
+flatlist admite numColumns={2}
+
+### clase 94 - react navigation
+
+hay que instalar la dependencia que es para expo y react native
+npm install @react-navigation/native
+tmb algunas dependencias que necesita
+expo install react-native-screens react-native-safe-area-context
+
+para usarlo 1° importamos el componente que envuelve
+import { NavigationContainer } from "@react-navigation/native"
+
+envolvemos la app con
+<NavigationContainer> el resto de la app</NavigationContainer>
+
+hay varios comportamientos de navegacion -> ver documentacion
+navigacion stack ==>>
+instalar => expo install @react-navigation/native-stack => metodo de navegacion
+importamos en app.js o archivo raiz
+import {createNativeStackNavigator} from "@react-navigation/native-stack"
+
+const Stack = createNativeStackNavigator()
+Stack.Natigator es un metodo que nos permite navegar entre componentes
+despues con stack creamos las rutas
+<NavigationContainer>
+<Stack.Navigator>
+<Stack.Screen name="mealsCategories" component={CategoriesScreen} />
+</Stack.Navigator>
+</NavigationContainer>
+
+Stack.Navigator => nos agrega un encabezado.. tmb nos borra el color de fondo
+el name="" => ademas de ser encabezado es la direccion que vmaos a usar para redirigirnos
+
+ENCABEZADO -> podemos personalizarlo en Stack.Screen
+options={{
+  title: "Algun titulo",
+  headerStyle: {
+    backgroundcolor: "#ccc"
+  }
+}}
+
+o dar un estilo global en el stack.navigator a todas las rutas  
+<Stack.Navigator
+screenOptions={{
+            headerStyle: {
+              backgroundColor: "#f4511e",
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }} >
+
+los componente que pasamos por Stack.screen tienen la prop navigation
+function CategoriesScreen({navigation}){
+navigation.navigate("en nombre en name") => podemos usar el metodo en un boton
+}
+
+segundo parametro es un objeto que podemos pasar las props
+navigation.navigate("en nombre en name", {prop1: dato1})
+
+para acceder a los datos desde el otro componente
+OtroComponente({route}) => destructuramos route y lo usamos para los props
+
+podemos usar los HOOKS => useNavigation y useRoute
+
+### clase 102 - Encabezados dinamicos
+
+podemos hacerlo desde archio raiz en stack.screen con el atributo options usandolo como funcion y destructurar para obtener route y navigation
+
+options={({route, navigation}) => {
+antes del return podemos hacer logica
+return
+}}
+
+O PODEMOS HACERLO desde el componente => usando route y navigaation tmb destructuramos las props
+
+navigation.setOptions() => y lo correcto es ahcerlo dentro del useEffect -> como el useeffect se ejecuta dsp de que se monto el componente queda feo entonces se usa useLayoutEffect
+useLayoutEffect(() => {
+navigation.setOptions({ title: nombreCategoria + " Food" });
+}, [navigation]);
+
+NAVIGATION PROPS => como pasar las?
+const algo = route.params.algoqueseusocomoruta;
+
+### clase 106 - encabezado header
+
+podemos agregar botones al encabezado agregando options en el stack.screen (si no necesitamos interaccion con el componente)
+options={{
+headerRight: () => {
+return <Text>Home</Text>;
+},
+}}
+
+si necesitamos interaccion lo hacemos en el componente
+
+useLayoutEffect(() => {
+navigation.setOptions({
+title: route.params.titulo,
+headerRight: () => {
+return <Button title="otro boton"/>;
+},
+});
+}, [navigation, titulo]);
+
+### clase 108 -> NAVIGATION => usamos otra app para probar
+
+otros tipos de navegacion
+
+DRAWER -> nos agrega una barra lateral por la que podemos navegar
+instalamos el paquete
+npm install @react-navigation/drawer
+
+con expo tambien tenemos que instalar
+npm install react-native-gesture-handler react-native-reanimated
+
+y como con stack.. importamos NavigationContainer de react-native
+importamos => createDrawerNavigator de "@react-navigation/drawer
+creamos => const Drawer = createDrawerNavigator() y lo usamos como Objeto con sus metodos
+<NavigationContainer>
+<Drawer.Navigator>
+<Drawer.Screen name="Bienvenido" component={WelcomeScreen} />
+</Drawer.Navigator>
+</NavigationContainer>
+
+tambien podemos personalizar el drawer
+-> individualmente en el Drwaer.Screen  
+options={{
+headerStyle: {
+backgroundColor: "#000",
+},
+headerTintColor: "white",
+drawerLabel: "Pantalla bienvenida", //personalizacion de la barra lateral
+drawerActiveBackgroundColor: "#000",
+sceneContainerStyle: { backgroundColor: "#000" },
+//para agregar iconos a la barra lateral podemos hacerlo asi
+drawerIcon: ({ color, size }) => (
+<Ionicons name="person" color={color} size={size} />
+),
+
+          }}
+
+-> estilos generales en el drawer.navigator
+
+ABRIR EL DRAWER desde componentes
+navigation.toggleDrawer(); => podemos usar el metodo toggl... que nos da navigation para abrir el menu lateral
+
+### clase 110 - Bottom Tabs Navigator
+
+instalar => npm install @react-navigation/bottom-tabs
+instalado ya se puede usar.
+y consiste en lo mismo
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs"
+const BottomTap = createBottomTabNavigator()
+<NavigationContainer>
+<BottomTap.Navigator>
+<BottomTap.Screen>
+
+<BottomTap.Navigator
+initialRouteName="Bienvenido"
+screenOptions={{
+headerStyle: {
+backgroundColor: "yellow",
+},
+headerTintColor: "#f4511e",
+tabBarActiveBackgroundColor: "black",
+tabBarActiveTintColor: "white",
+}} >
+
+<BottomTap.Screen
+name="Bienvenido"
+component={WelcomeScreen}
+options={{
+tabBarIcon: ({ color, size }) => (
+<Ionicons name="home" color={color} size={size} />
+),
+}}
+/>
+
+### clase 111 - nesting navigators anidar navegadores
+
+==>>>> volvemos a app seccion 6
+
+creamos un componente para mostrar el Drawer
+function DrawerNavigator() {
+return (
+<Drawer.Navigator>
+<Drawer.Screen name="Drawer" component={DrawerNavigator} />
+<Drawer.Screen name="Favoritos" component={Favoritos} />
+</Drawer.Navigator>
+);
+}
+
+entonces en el navegador inicial mostramos como screen el componente que creamos =>
+<Stack.Screen
+name="Drawer"
+component={DrawerNavigator} />
+
+CADA NAVEGADOR TIENE SU CABECERA.. por lo que si anidamos va haber varias..
+podemos eliminar la cabezara que este demas con options en el anidamiento ver app seccion 6 app.js
