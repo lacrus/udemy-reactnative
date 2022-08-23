@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useContext, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,16 +9,35 @@ import {
   Alert,
 } from "react-native";
 import IconButton from "../components/IconButton";
+import { FavoritosContexto } from "../store/context/favoritos-contexto.jsx";
+import { useSelector, useDispatch } from "react-redux";
+import { agregarFavorito, removeFavorite } from "../store/redux/favoritos";
 
 import { MEALS } from "../data/dummy-data";
 
 export default function InfoComida({ route, navigation }) {
   const { titulo, id } = route.params;
 
+  const dispatch = useDispatch();
+
+  const comidasFavoritasEstado = useSelector(
+    (e) => e.estadoComidasFavoritas.ids
+  );
+
+  const comidaFavorita = comidasFavoritasEstado.includes(id);
+
+  // const comidasFavoritasContexto = useContext(FavoritosContexto);
+  // const comidaFavorita = comidasFavoritasContexto.ids.includes(id);
   const comidaSeleccionada = MEALS.find((i) => i.id === id);
-  function botonEncabezadoHandler() {
-    console.log("soy encabezado");
-    Alert.alert("JAJAJA", "este boton no hace nada");
+
+  function botonFavoritoHandler() {
+    if (comidaFavorita) {
+      // comidasFavoritasContexto.eliminarFavoritos(id);
+      dispatch(removeFavorite({ id: id }));
+    } else {
+      // comidasFavoritasContexto.agregarFavoritos(id);
+      dispatch(agregarFavorito({ id: id }));
+    }
   }
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -27,15 +46,13 @@ export default function InfoComida({ route, navigation }) {
         return (
           <IconButton
             icon="star"
-            color="white"
-            onPress={botonEncabezadoHandler}
+            color={comidaFavorita ? "yellow" : "white"}
+            onPress={botonFavoritoHandler}
           />
         );
       },
     });
-  }, [navigation, titulo]);
-
-  // console.log(titulo);
+  }, [navigation, botonFavoritoHandler]);
 
   return (
     <ScrollView style={styles.contenedor}>
@@ -60,7 +77,7 @@ export default function InfoComida({ route, navigation }) {
         <Text style={styles.titulo}>Ingredientes</Text>
         {comidaSeleccionada.ingredients.map((i) => {
           return (
-            <View style={styles.data}>
+            <View key={i} style={styles.data}>
               <Text style={[styles.texto, styles.textoLista]}>{i}</Text>
             </View>
           );
@@ -69,7 +86,7 @@ export default function InfoComida({ route, navigation }) {
         <Text style={styles.titulo}>Pasos</Text>
         {comidaSeleccionada.steps.map((i) => {
           return (
-            <View style={styles.data}>
+            <View key={i} style={styles.data}>
               <Text style={[styles.texto, styles.textoLista]}>{i}</Text>
             </View>
           );

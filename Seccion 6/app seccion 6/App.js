@@ -5,6 +5,9 @@ import ListadoComidas from "./screens/ListadoComidas.jsx";
 import InfoComida from "./screens/InfoComida";
 import Favoritos from "./screens/Favoritos";
 import { Ionicons } from "@expo/vector-icons";
+import FavoritosContextoProvider from "./store/context/favoritos-contexto";
+import { Provider } from "react-redux";
+import store from "./store/redux/store";
 
 import { CATEGORIES } from "./data/dummy-data";
 
@@ -64,50 +67,54 @@ export default function App() {
   return (
     <>
       <StatusBar style="light" />
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="Drawer"
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: "#000",
-            },
-            headerTintColor: "#f4511e",
-            headerTitleStyle: {
-              fontWeight: "bold",
-            },
-            contentStyle: { backgroundColor: "#000" },
-          }}
-        >
-          <Stack.Screen
-            // name="mealsCategories"
-            // component={CategoriesScreen}
-            name="Drawer"
-            component={DrawerNavigator}
-            options={{
-              title: "Categorias",
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="ListadoComidas"
-            component={ListadoComidas}
-            options={{
-              headerRight: () => {
-                return <Button title="home" />;
+      {/* <FavoritosContextoProvider> */}
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="Drawer"
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: "#000",
               },
+              headerTintColor: "#f4511e",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
+              contentStyle: { backgroundColor: "#000" },
             }}
-            // options={({ route, navigation }) => {
-            //   const nombreCategoria = CATEGORIES.filter(
-            //     (i) => i.id === route.params.categoryId
-            //   )[0].title;
-            //   return {
-            //     title: nombreCategoria + "  Food",
-            //   };
-            // }}
-          />
-          <Stack.Screen name="InfoComida" component={InfoComida} />
-        </Stack.Navigator>
-      </NavigationContainer>
+          >
+            <Stack.Screen
+              // name="mealsCategories"
+              // component={CategoriesScreen}
+              name="Drawer"
+              component={DrawerNavigator}
+              options={{
+                title: "Categorias",
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="ListadoComidas"
+              component={ListadoComidas}
+              options={{
+                headerRight: () => {
+                  return <Button title="home" />;
+                },
+              }}
+              // options={({ route, navigation }) => {
+              //   const nombreCategoria = CATEGORIES.filter(
+              //     (i) => i.id === route.params.categoryId
+              //   )[0].title;
+              //   return {
+              //     title: nombreCategoria + "  Food",
+              //   };
+              // }}
+            />
+            <Stack.Screen name="InfoComida" component={InfoComida} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
+      {/* </FavoritosContextoProvider> */}
     </>
   );
 }

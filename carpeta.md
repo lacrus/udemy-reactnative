@@ -590,3 +590,35 @@ component={DrawerNavigator} />
 
 CADA NAVEGADOR TIENE SU CABECERA.. por lo que si anidamos va haber varias..
 podemos eliminar la cabezara que este demas con options en el anidamiento ver app seccion 6 app.js
+
+## SECCION 7 - CONTEXTO REACT - REDUX
+
+--> misma app que seccion 6
+
+### clase 115 - contexto react api
+
+CARPETA store -> context -> favoritos-context.jsx
+
+creamos un contexto
+import { createContext } from "react";
+export const FavoritosContext = createContext({ids: [],
+agregarFavoritos: (id) => {}, //metodos que podemos usar
+eliminarFavoritos: (id) => {},})
+export default function FavoritosContextoProvider({ children }) {
+//aca creamos la logica que tengamos que hacer antes de renderizar
+return <FavoritosContexto.Provider>{children}</FavoritosContexto.Provider>;
+}
+
+en archivo raiz importamos la funcion del componente que creamos
+import FavoritosContextoProvider from "./store/context/favoritos-contexto";
+y despues envolvemos la app.. o los componentes que necesiten el contexto con el componente
+<FavoritosContextoProvider>
+<NavigationContainer>
+</NavigationContainer>
+</FavoritosContextoProvider>
+
+despues en el componente que necesitemos el estado importamos useContex
+import {useContext} from "react"
+e importamos tambien el contexto en si para luego usarlo con useContext
+import { FavoritosContexto } from "../store/context/favoritos-contexto";
+const favoritosContexto = useContext(FavoritosContexto);
