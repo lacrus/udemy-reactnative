@@ -37,7 +37,6 @@ function DrawerNavigator() {
         tabBarInactiveBackgroundColor: "#000",
         tabBarInactiveTintColor: "white",
       }}
-      s
     >
       <BottomTap.Screen
         name="mealsCategories"

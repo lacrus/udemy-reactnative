@@ -622,3 +622,52 @@ import {useContext} from "react"
 e importamos tambien el contexto en si para luego usarlo con useContext
 import { FavoritosContexto } from "../store/context/favoritos-contexto";
 const favoritosContexto = useContext(FavoritosContexto);
+
+## SECCION 8 - app de practica
+
+### clase 136.. pasando un objeto a screenOptions
+
+al pasarle una funcion podes destructurar los parametros para poder pasarle navigation.. y esto lo que hace es permitirnos usar navigation dentro de ese componente.. es igual a usar el hook de useNavigation()
+
+<BottomTabs.Navigator
+screenOptions={({ navigation }) => ({
+headerStyle: {
+backgroundColor: GlobalStyles.colors.primary500,
+},}}
+
+### clase 137.. de donde vengo?
+
+navigation.navigate("ManageExpense", {
+expenseId: id,
+});
+
+en .navigate pasamos un segundo argumento que va a ser un objeto con la propiedad que necesitemos usar para identificar, despues en el componente que pusimos como primer parametro podemos destructurar ManageExpense({route})
+
+### clase 140 - boton reutilizable
+
+    <View style={style}>
+      <Pressable onPress={onPress}>
+        <View style={[s.button, mode === "flat" && s.flat]}>
+          <Text style={[s.buttonText, mode === "flat" && s.flatText]}>
+            {children}
+          </Text>
+        </View>
+      </Pressable>
+    </View>
+
+## seccion 9 - manejar inputs
+
+import { View, TextInput, Text } from "react-native";
+export default function Input({ label }, textInputConfig) {
+return (
+<View>
+<Text>{label}</Text>+
+<TextInput {...textInputConfig} />
+</View>
+);
+
+al pasarle un objeto como configuracion.. podemos (donde vamos a usarlo..) pasarle todas las configuraciones que queremos en un solo objeto
+
+### clase 157 - manejo de errores validaciones
+
+convertir cada input en un objeto con la propiedad value y otra isValid !!
