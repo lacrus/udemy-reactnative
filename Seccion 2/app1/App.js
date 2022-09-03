@@ -43,7 +43,7 @@ export default function App() {
       return tareasActuales.filter((i, index) => index !== o);
     });
 
-    console.log(refInput.current);
+    // console.log(refInput.current);
   }
 
   return (

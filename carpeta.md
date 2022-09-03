@@ -671,3 +671,26 @@ al pasarle un objeto como configuracion.. podemos (donde vamos a usarlo..) pasar
 ### clase 157 - manejo de errores validaciones
 
 convertir cada input en un objeto con la propiedad value y otra isValid !!
+
+### clase 161 - firebase
+
+desde la pagina creamos un proyecto.. desabilitamos analitycs
+creamos una Realtima Database -> Crar una base de datos -> comenzar en modo de prueba
+
+en los endpoint de firebase tenemos que poner .json (/expenses.json) para que sepa de que nodo se trata
+
+### clase 168 - loading spinner
+
+react-native tiene spinner propio que es la ruedita girando..
+
+import { View, ActivityIndicator, StyleSheet } from "react-native";
+
+lo importamos y despues lo usamos dentro de un componente
+
+export default function Loading() {
+return (
+<View style={s.container}>
+<ActivityIndicator size="large" color="white" />
+</View>
+);
+}

@@ -1,4 +1,4 @@
-import { useContext, useLayoutEffect } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,8 +12,13 @@ import { GlobalStyles } from "../constants/styles";
 import Button from "../components/ExpensesOutput/UI/Button";
 import { ExpensesContext } from "../store/expenses-context";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
+import { deleteExpense, storeExpense, updateExpense } from "../util/http";
+import Loading from "../components/ExpensesOutput/UI/Loading";
+import Error from "../components/ExpensesOutput/UI/Error";
 
 export default function ManageExpense({ route, navigation }) {
+  const [estaCargando, setEstaCargando] = useState(false);
+  const [hayError, setHayError] = useState();
   const expensesContext = useContext(ExpensesContext);
 
   const editedExpenseId = route.params?.expenseId;
@@ -33,17 +38,48 @@ export default function ManageExpense({ route, navigation }) {
     navigation.goBack();
   }
 
-  function confirmHanlder(expenseData) {
-    if (isEditing) {
-      expensesContext.updateExpense(editedExpenseId, expenseData);
-    } else {
-      expensesContext.addExpense(expenseData);
+  async function confirmHanlder(expenseData) {
+    setEstaCargando(true);
+    try {
+      if (isEditing) {
+        expensesContext.updateExpense(editedExpenseId, expenseData);
+        await updateExpense(editedExpenseId, expenseData);
+      } else {
+        const id = await storeExpense(expenseData);
+        expensesContext.addExpense({ ...expenseData, id: id });
+      }
+      navigation.goBack();
+      // setEstaCargando(false);
+    } catch (error) {
+      setHayError(
+        "No pudimos guardar el gasto, por favor intentalo mas tarde!"
+      );
+      setEstaCargando(false);
     }
-    navigation.goBack();
   }
-  function deleteExpenseHandler() {
-    expensesContext.deleteExpense(editedExpenseId);
-    navigation.goBack();
+
+  async function deleteExpenseHandler() {
+    setEstaCargando(true);
+    try {
+      expensesContext.deleteExpense(editedExpenseId);
+      await deleteExpense(editedExpenseId);
+      navigation.goBack();
+    } catch (error) {
+      setHayError("No pudimos eliminar el gasto, por favor intenta mas tarde!");
+      setEstaCargando(false);
+    }
+  }
+
+  function cerrarHandler() {
+    setHayError(null);
+  }
+
+  if (hayError && !estaCargando) {
+    return <Error message={hayError} onConfirm={cerrarHandler} />;
+  }
+
+  if (estaCargando) {
+    return <Loading />;
   }
 
   return (

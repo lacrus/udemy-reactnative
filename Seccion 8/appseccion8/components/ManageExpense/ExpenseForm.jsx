@@ -12,7 +12,6 @@ export default function ExpenseForm({
   onCancel,
   defaultValues,
 }) {
-  console.log(defaultValues?.date);
   const [inputs, setInputs] = useState({
     amount: {
       value: defaultValues ? defaultValues.amount.toString() : "",
@@ -40,11 +39,9 @@ export default function ExpenseForm({
   }
 
   function handleConfirm(selectedDate) {
-    console.log(selectedDate);
     setInputs((actual) => {
       return { ...actual, date: { value: selectedDate, isValid: true } };
     });
-    console.log(typeof inputs.date.value);
     setShow(false);
   }
 
@@ -60,7 +57,6 @@ export default function ExpenseForm({
       description: inputs.description.value,
     };
 
-    console.log(expenseData);
     const amountIsValid = !isNaN(expenseData.amount) && expenseData.amount > 0;
     const dateIsValid = expenseData.date.toString() !== "Invalid Date";
     const descriptionIsValid = expenseData.description.trim().length > 0;
@@ -78,8 +74,7 @@ export default function ExpenseForm({
       });
       return;
     }
-    console.log("vino aca");
-    // onSubmit(expenseData);
+    onSubmit(expenseData);
   }
 
   const formIsInvalid =
