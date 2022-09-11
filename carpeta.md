@@ -45,6 +45,7 @@ INSTALAMOS:
 expo: de manera global -> npm install -g expo-cli (para saber si se instalo bien ejecutamos el comando expo en la terminal y nos deben saltar todos los comandos)
 
 ejecutamos -> expo init NOMBREAPP -> dentro de la carpeta que queremos crear la APP
+creamos un flujo => EXPO MANAGED WORKFLOW
 
 nos aparece un menu para elegir el tipo de proyecto a crear
 
@@ -798,3 +799,90 @@ get start =>
 SQLite EXPO DOCUMENTATION => una libreria de expo => https://docs.expo.dev/versions/latest/sdk/sqlite/
 
 expo install expo-sqlite
+
+
+## SECCION 13 - APP SIN EXPO
+
+### clase 222 - como funciona expo?
+expo simplifica las cosas para el desarrollo porque instala la app que permite que podamos ir probando el codigo.
+
+PERO cuando creamos aplicaciones con EXPO no creamos aplicaciones reales, no son aplicaciones independientes que se pueden ejecutar por si mismas, necesitan de expo para poder compilarse
+
+
+### clase 223 - alternativas de flujo
+
+- EXPO "MANAGED WORKFLOW" => la q se usa en el curso
+  facil de configurar y trabajar
+  rapido y sin fricciones
+  pocas configuraciones extra necesarias, especialmente con native features y paquetes de terceros
+  podemos crear aplicaciones multiplataformas
+
+- EXPO "BARE WORKFLOW" => cuando se necesita mas control, instala menos configuraciones listas para usar
+  se usa cuando necesitamos mezclar el codigo con codigo nativo de ios o android (esto se peude con react native)
+
+
+- => REAC NATIVE CLI => proyectos sin EXPO en absoluto
+  instalacion/configuracion mas compleja
+  la ventaja es que se tiene mas control}
+  las aplicaciones se crean localmente.. en windows no podemos crear apps para ios
+
+### clase 224 => configuracion entorno
+
+https://reactnative.dev/docs/environment-setup
+
+hay que seguir los pasos de la pagina para configurar el entorno..
+como la app de expo go no siempre funciona con el BARE WORKFLOW (y no funciona con el rn cli) necesitamos primero construir la app en nuestra computadora y despues de ahi mandarlo al emulador.
+
+para eso se hacen bastantes configuraciones que son las que hablaba la clase pasada
+
+### clase 225 => crear una app con BARE WORKFLOW
+
+expo init NOMBREAPP
+seleccionamos la opcion MINIMAL => de la parte --bare workflow--
+
+diferencias
+crea una carpeta android y otra ios => en las que hay codigo nativo - configuraciones y demas
+
+index.js => le avisa a RN que App es el archivo raiz
+
+app.json => es mucho mas corto porque antes las configuraciones se hacian ahi para ambas plataformas.. ahora se hace en la carpeta de cada uno
+
+---------------------
+si hicimos todas las configuraciones para trbajar con el bare workflow
+en package.json hay 2 script que podemos ejecutar segun la plataforma que tengamos
+expo run:ios // expo run:android
+
+### clase 226 - bare workflow y librerias
+
+para usar la ubicacion por ej.. podemos usar el paquete de location
+
+pero tenemos que hacer configuraciones adicionales => que estan en la pagina de expo explicadas => permisos/
+
+### clase 227 => pasar de expo maneged workflow a bare workflow
+
+en la consola ejecutamos => expo eject
+
+nos pide el nombre para la aplicacion => primero para android y dsp para ios
+debe ser un identificador unico para las aplicaciones
+
+y listo.. crea las carpetas y demas necesarias para el bare workflow y seguimos trabajando con el bare workflow
+
+### clase 228 - NO EXPO - REACT NATIVE CLI
+para configurar el entorno vamos a la pagina y seguimos los pasos para el workflow
+https://reactnative.dev/docs/environment-setup => react native CLI quickstart
+
+Creating a new application => npx react-native init NOMPREAPP
+si no funciona el compando de npx podemos instalarlo de forma global => npm install -g react-native-cli => y una ves que se instalo ahi hacemos react-native init NOMBREAPP
+
+el proyecto tiene una estructura diferente pero funciona todo de la misma manera.. los componentes son text view etc.. lo que cambia son las configuraciones que hay que hacer y especialmente cuando usamos librerias que hagan uso de las funciones nativas de los dispositivos
+
+para ejecutar.. despues de todas las configuraciones
+npm run andoid / npm run ios
+aparte de abrirse el simulador se abre la consola de desarrollo.. la tenemos que dehjar abierta
+
+### clase 229 - librerias sin EXPO
+podemos pasar de una app sin expo a una de expo bear workflow.. instala algunos modulos de expo y ahi podemos usar los paquetes de expo..
+
+SIN EXPO
+podemos buscar paquetes para react-native de acuerdo a lo que necesitemos (ubicacion x ej)
+tenemos que seguir todo el tema de las configuraciones/permisos etc
