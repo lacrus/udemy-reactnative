@@ -694,3 +694,107 @@ return (
 </View>
 );
 }
+
+## seccion 11 - User Autentication
+
+### clase 185 - guardar token en el dispositivo
+
+para guardar el token en el dispositivo usamos una libreria => como x ej =>
+
+Async Storage React Native
+
+instalamos la libreria.. importamos en el archivo que la necesitamos.. y despues la usamos
+
+import AsyncStorage from "@react-native-async-storage/async-storage"
+
+AsyncStorage.setItem("key", "value") => debe ser siempre un string.. por lo que si es un objeto lo podemos pasar a JSON
+
+AsyncStorage.getItem("key") => para recuperar la informacion del storage del dispositivo
+
+AsyncStorage.removeItem("key") => para eliminar el item que queramos del storage
+
+## SECCION 12 - NATIVE DEVICE FEATURES
+
+nueva app
+
+### clase 195 - camara
+
+https://docs.expo.dev/versions/latest/sdk/camera/ => buscar expo camera en google
+
+es un paquete que permite configurar toda una pantalla de camara que no solo permite scar fotos..
+
+ImagePicker => https://docs.expo.dev/versions/v46.0.0/sdk/imagepicker/
+
+este paquete nos permite seleccionar las fotos del dispositivo o abrir la camara para sar una nueva foto
+
+es importante configurar los PERMISOS => cuando una app solicita abrir la camara por ej.. el usuario debe darle permiso
+
+los permisos se agregan en el archivo app.json.. para el imagepicker agregamos
+
+"plugins": [
+["expo-image-picker",{"photosPermission": "The app accesses your photos to let you share them with your friends."}]
+]
+
+creamos un boton para que cuando lo apretamos nos abra la camara..
+
+import { launchCameraAsync } from "expo-image-picker";
+
+y en la function que llamamos cuando apretamos el boton incluimos la funcion.. y como parametro pasamos un objeto con las configuraciones.. calidad, editar, aspecto, etc...
+
+async function takeImageHandler() {
+const image = await launchCameraAsync( {
+allowsEditing: true,
+aspect: [16, 9],
+quality: 0.5,
+} );
+console.log(image);
+}
+
+para IOS debemos hacer otros ajustes => archivo ImagePicker.jsx
+
+### clase 200 => LOCATION UBICACION
+
+https://docs.expo.dev/versions/latest/sdk/location/ => expo location
+
+expo install expo-location
+
+una ves instalada tenemos que ver el tema de los PERMISOS => paral a ubicacion tenemos un permiso especial.. que es para cuando la aplicacion se esta ejecutando en segundo plano.. eso esta en la pagina de arriba, en el titulo => Background Location Methods
+Ese es el PERMISO que hay que configurar.. el permiso para el uso comun ya lo hace el paquete.. pero igual tenemos que preguntar por el permiso, s
+
+y despues de eso es parecido a la camara.. importamos y usamos a traves de un boton que ejecute las funciones
+
+import { getCurrentPositionAsync } from "expo-location"; => son funciones asincronicas
+
+### clase 202 => mostar estatico
+
+se usa una API de google Maps.. porque es la mas popular pero SON APIS PAGAS!!!!!!
+por lo que tenemos que iniciar sesion en google.. crear o usar un proyecto y habilitar las API KEY
+
+api que devuelve una imagen de un mapa con los marcadores y eso =>
+https://developers.google.com/maps/documentation/maps-static
+archivo => LocationPicker.jsx
+
+hay otras apis de google que tambien devuelven un mapa interactivo.. ver en google...
+
+### clase 203 => mapa interactivo
+
+para esto instalamos expo-map-view => expo install react-native-maps
+https://docs.expo.dev/versions/latest/sdk/map-view/
+
+### clase 206 => useIsFocused
+
+hook de react navigation para re renderizar los componentes por ej en el Stack.navigation.. que una pantalla no se vuelve a montar.. sino que se mantiene en segundo plano y cuando volvemos a ese componente en realidad no se esta volviendo a renderizar sino que simplemente sale del segundo plano
+
+### clase 209 - convertir coordenandas en direccion legible
+
+usamos otra API de google que permite traducir coordenadas a direcciones y viceversa
+
+https://developers.google.com/maps/documentation/geocoding/overview
+
+get start =>
+
+### clase 213 => crear una base de datos local en el dispositivo
+
+SQLite EXPO DOCUMENTATION => una libreria de expo => https://docs.expo.dev/versions/latest/sdk/sqlite/
+
+expo install expo-sqlite

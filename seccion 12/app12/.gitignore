@@ -12,9 +12,3 @@ web-build/
 
 # macOS
 .DS_Store
-
-#-lock
-package-lock.json
-
-# CLAVES, ETC
-privado.js
