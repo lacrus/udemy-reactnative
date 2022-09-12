@@ -800,14 +800,13 @@ SQLite EXPO DOCUMENTATION => una libreria de expo => https://docs.expo.dev/versi
 
 expo install expo-sqlite
 
-
 ## SECCION 13 - APP SIN EXPO
 
 ### clase 222 - como funciona expo?
+
 expo simplifica las cosas para el desarrollo porque instala la app que permite que podamos ir probando el codigo.
 
 PERO cuando creamos aplicaciones con EXPO no creamos aplicaciones reales, no son aplicaciones independientes que se pueden ejecutar por si mismas, necesitan de expo para poder compilarse
-
 
 ### clase 223 - alternativas de flujo
 
@@ -819,7 +818,6 @@ PERO cuando creamos aplicaciones con EXPO no creamos aplicaciones reales, no son
 
 - EXPO "BARE WORKFLOW" => cuando se necesita mas control, instala menos configuraciones listas para usar
   se usa cuando necesitamos mezclar el codigo con codigo nativo de ios o android (esto se peude con react native)
-
 
 - => REAC NATIVE CLI => proyectos sin EXPO en absoluto
   instalacion/configuracion mas compleja
@@ -847,7 +845,8 @@ index.js => le avisa a RN que App es el archivo raiz
 
 app.json => es mucho mas corto porque antes las configuraciones se hacian ahi para ambas plataformas.. ahora se hace en la carpeta de cada uno
 
----------------------
+---
+
 si hicimos todas las configuraciones para trbajar con el bare workflow
 en package.json hay 2 script que podemos ejecutar segun la plataforma que tengamos
 expo run:ios // expo run:android
@@ -868,6 +867,7 @@ debe ser un identificador unico para las aplicaciones
 y listo.. crea las carpetas y demas necesarias para el bare workflow y seguimos trabajando con el bare workflow
 
 ### clase 228 - NO EXPO - REACT NATIVE CLI
+
 para configurar el entorno vamos a la pagina y seguimos los pasos para el workflow
 https://reactnative.dev/docs/environment-setup => react native CLI quickstart
 
@@ -881,8 +881,109 @@ npm run andoid / npm run ios
 aparte de abrirse el simulador se abre la consola de desarrollo.. la tenemos que dehjar abierta
 
 ### clase 229 - librerias sin EXPO
+
 podemos pasar de una app sin expo a una de expo bear workflow.. instala algunos modulos de expo y ahi podemos usar los paquetes de expo..
 
 SIN EXPO
 podemos buscar paquetes para react-native de acuerdo a lo que necesitemos (ubicacion x ej)
 tenemos que seguir todo el tema de las configuraciones/permisos etc
+
+## SECCION 14 - publicacion de aplicaciones
+
+### clase 232 - como publicar?
+
+diferenciar entre aplicaciones creadas con expo / sin expo
+
+- con expo
+  configurar el proyecto -> hay un monton de configuraciones q se pueden ahcer pero un par son las importantes
+  crear las aplicaciones binarias con los servicios en la nube de expo -> las crea tanto para android como para ios.. si las hacemos localmente no podemos crear una app para ios en windows
+  despues queda subir la app a los store.. que lo podemos hacer manualmente o tambien a traves de expo
+
+- sin expo
+  tenemos que configurar el proyecto
+  hay que compilar las app binarias en nuestra computadora (no tenemos el servicio de expo) hay servicios de terceros en internet que funcionan como expo tambien
+  subir lso archivos a los store manualmente
+
+### classe 233 - configuracion para produccion
+
+- PERMISOS => camara, ubicacion
+- NOMBRE DE LA APP e IDENTIFICADOR UNICO => tenemos que crear un nombre de vista (como lo ven los usuario) - un identificador para la app unico en el store - y la version (para poder actualizarlo)
+- VARIABLES DE ENTORNO => x ej api keys
+- ICONOS & PANTALLAS DE CARGA => pantalla de carga cuando la app se esta iniciando (expo tiene una por defecto pero se puede personalizar)
+
+### clase 234 - NOMBRE DE LA APP Y VERSIONES
+
+para CONSTRUIR la app usamos el servicio EXPO APPLICATION SERVICES (EAS)
+https://docs.expo.dev/versions/v46.0.0/config/app/
+
+app.json => podemos configurar el nombre de la aplicacion, descripcion, dueño.. ect
+version: => podemos poner un numero de version multiplataforma.. o diferenciar entre android e ios
+las versiones diferenciadas son solo internas.. no las ven los usuarios pero si los store
+
+### clase 235 - VARIABLES DE ENTORNO
+
+documentacion EAS => https://docs.expo.dev/build-reference/variables/
+
+### clase 236 - iconos y pantalla carga
+
+icon y splash en app.json
+
+"icon": "./assets/icon.png",
+"splash": {
+"image": "./assets/splash.png",
+"resizeMode": "contain",
+"backgroundColor": "#ffffff"
+},
+
+lo unico que hay que hacer es cambiar los archivos en la carpeta assets por lo que queremos usar
+
+adaptive-icon => es para android
+favicon => es solo para cuando estamos usando la app de expo o en el simulador
+icon =>
+splash =>
+
+si no usamos expo tenemos que crear iconos para cada uno de los tamñanos y resoluciones
+al usar expo esto lo hace automaticamente el servicio en la nube
+
+### clase 237 - building expo apps whit eas - construir las app con expo eas
+
+https://docs.expo.dev/build/setup/ => seguir los pasos
+
+- Prerequisites
+  un proyecto de react native
+  hay q tener usuario y contraseña de expo..
+
+- 1 Install the latest EAS CLI => npm install -g eas-cli
+- 2 Log in to your Expo account => eas login
+- 3 Configure the project => eas build:configure
+  - seleccionar para que plataforma vamos a crear la app
+  - esto crear un archivo eas.json q tiene configuraciones extra para las aplicacion expo
+- 4 Run a build
+  - primero podemos crear una app optimizada para dispositivos y simulador.. para probarla antes de mandarla a las tiendas
+  - android => https://docs.expo.dev/build-reference/apk/
+    - tenemos que agregar una linea al eas.json => "buildType": "apk"
+    - dsp ejecutar => eas build -p android --profile preview => elegimos el id para la app
+    - dsp de confirmar tenemos el nombre de la app en el eas.json
+      tenemos que generar el android keystore
+      si ponemos yes.. la clave se guarda en los servidores de expo.. si ponemos que no tenemos que configurar nuestra propia tienda de claves
+  - PRODUCCION
+    - android: en eas.json en "production" agregamos => ver en la pagina de eas como es el tema
+    - despues corremos el comando que esta en la pagina con el perfil de produccion o sin perfil
+    - tenemos que tenes una membresia de desarrollador y hacer un pago unico de 25 dolares
+
+==>> si la compilacion falla.. podemos ir, en el navegador en la pagina de expo al proyecto y ahi ver la informacion sobre la construccion de la app
+
+- ios => https://docs.expo.dev/build-reference/simulators/
+
+  - en eas.json agregamos la configuracion para ios
+  - ejecutamos en la terminal => eas build -p ios --profile preview =>
+
+- PRODUCCION
+  - no podemos solo ejecutar el comando con el perfil de produccion hay ciertas configuraciones
+  - se debe tener una membresia de 99 dolares al año
+  - una ves que tenemos la cuenta debemos generar CERTIFICADOS
+  - ejecutamos => eas build --platform ios
+  - cuando pregunte por los certificados y demas ponemos cancelar y vmaos a la pgina de apple
+  - iniciamos sesion.. y despues de pagar por los 99 dolares creamos el "Cretificado de distribucion" y el "perfil de provision" => siempre ligado a la opcion app store
+  - cuando creamos estas dos cosas se crean 2 arhcivos que los lleamos a la cafpeta de nuestra app(poner en git ignore) y le avisamos a aes.jsson que estane sos archivos
+    => esta configuracion la bvuscamos en la pag de expo
