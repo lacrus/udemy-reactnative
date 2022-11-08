@@ -36,9 +36,9 @@ para usar algunas funciones nativas de los dispositivos (camara etc) hay que hac
 
     ventaja -> integracion mas sencilla con codigo nativo de los dispositivos
 
-### clase 6 - creando un neuvo proyecto RN
+### clase 6 - creando un nuevo proyecto RN
 
-antes de instalar RN debemos instalar NODE-js para poder trabajar con modulos.. y RN se instala con NPM
+antes de instalar RN debemos instalar NODE.js para poder trabajar con modulos.. y RN se instala con NPM
 
 EMPEZANDO -> https://reactnative.dev/docs/environment-setup
 INSTALAMOS:
@@ -987,3 +987,158 @@ https://docs.expo.dev/build/setup/ => seguir los pasos
   - iniciamos sesion.. y despues de pagar por los 99 dolares creamos el "Cretificado de distribucion" y el "perfil de provision" => siempre ligado a la opcion app store
   - cuando creamos estas dos cosas se crean 2 arhcivos que los lleamos a la cafpeta de nuestra app(poner en git ignore) y le avisamos a aes.jsson que estane sos archivos
     => esta configuracion la bvuscamos en la pag de expo
+
+## SECCION 15 - PUSH NOTIFICATIONS (NOTIFICACIONES)
+
+### clase 243 - notificaciones locales
+
+son notificaciones activadas por aplicaciones instaladas en el dispositivo.
+Estas notificaciones se programan desde la app
+
+### clase 244
+
+EXPO NOTIFICATIONS => se usa para local y push
+https://docs.expo.dev/versions/latest/sdk/notifications/
+
+=> npx expo install expo-notifications
+
+ver la DOCUMENTACION para la CONFIGURACION
+
+en app.json agregamos lo sig... icon y color es solo para android...
+"plugins": [
+["expo-notifications",{
+"icon": "./local/assets/icon.png",
+"color": "#ffffff",
+"sounds": [
+"./local/assets/notification-sound.wav",
+"./local/assets/notification-sound-other.wav"]}]]
+
+ESTO ES PARA NOTIFICACAIONES LOCALES.. PARA PUSH NOTIFICATIONS ES NECESARIO SEGUIR OTROS PASOS QUE ESTAN EN LA PAG
+
+- NOTIFIACIONES LOCALES+
+  importamos todo de la libreria de expo-notifications.. eso que importamos tiene metodos que podemos usar dentro de una funcion
+  import \* as Notifications from "expo-notifications";
+
+scheduleNotificationAsync => es para crear notificaciones.. como parametro recibe un objeto con las configuraciones para la notificacion
+
+function notificacionHandler() {
+Notifications.scheduleNotificationAsync({
+//content => tiene muchas mas configuraciones que podemos hacer
+content: {
+title: "mi primer notificaion local",
+body: "este es el cuerpo de la notificacion",
+data: { userName: "Max" }
+},
+//trigger
+trigger: {seconds: 3,},})}
+
+container => https://docs.expo.dev/versions/latest/sdk/notifications/#notificationcontentinput
+trigger => https://docs.expo.dev/versions/latest/sdk/notifications/#notificationtriggerinput
+Or you set a specific date (incl. time) at which the notification will be delivered: https://docs.expo.dev/versions/latest/sdk/notifications/#datetriggerinput
+Or you set a daily time at which the notification will be sent (Android-only): https://docs.expo.dev/versions/latest/sdk/notifications/#dailynotificationtrigger
+
+Or a weekly trigg
+Or a specific date (iOS-only): https://docs.expo.dev/versions/latest/sdk/notifications/#calendarnotificationtrigger
+
+### clase 247 - manejar notificaciones
+
+en el archivo app.js => fuera del componente App => declaramos
+Notifications.setNotificationHandler() => esto va hacer que cuando abrimos la aplicacion.. le dice a la app como manejar las notificaciones ralicacionadas con la app.. y de ahi la app le dice al sistema como manejarlas
+
+el metodo recibe un objeto como parametro
+setNotificationHandler({
+// handleNotification => se activa cada ves que se recibe una noti => recibe una function // OBLIGATORIO
+
+// handleError
+handleSuccess: ,
+})
+
+### clase 249 - acciones luego de las notificaciones
+
+el objeto que importamos de "expo-notifications" nos provee metodos que son escuchadores de eventos
+
+es buena practica agregar los escuchadores dentro del archivo app.js (en un useEffect()).. ya que esta se renderiza siempre y puede estar escuchando y cuando se cierra se cancelan esos escuchadores.. y no hace falta crear en cada componente (perdida de memoria)
+
+Notifications.addNotificationReceivedListener => es para acciones automaticas
+Notifications.addNotificationResponseReceivedListener => es par acuando el usuario responde a la notificacion tocandola
+
+en la respuesta a esos metodos podemos encontrar informacion que se creo cuando se "creo" la notificacion => response.notification.request.content.data.LAINFORMACION
+
+useEffect(() => {
+const subscription = Notifications.addNotificationReceivedListener(
+(notification) => {
+console.log("notificacion recibida");
+console.log(notification);
+});
+return () => {
+subscription.remove();
+};}, []);
+
+### clase 251 - push notifications
+
+las notificaciones externas pueden proveer de una app que le avisa a otra app como tambien de un backend.. pero no podemos enviar notificaciones directas a las aplicaciones.. si no que las enviamos a los servidores de google y de apple que se encargan de mandar esas notificaciones a los dispositivos
+
+### clase 252 - push token
+
+configuraciones => https://docs.expo.dev/push-notifications/push-notifications-setup/#credentials
+
+> solicitar permisos para IOS
+> obtener el ExpoPushToken => actua como la direccion a la que queremos enviar la notificacion
+
+PUSH TOKEN =>
+obtener el token => el token es la direccion de un dispositivo.. para obtener la direccion del sipositivo podemos hacerlo desde varias partes de la app, o en alguna accion especifica del usuario etc..
+
+    Notifications.getExpoPushTokenAsync().then((response) =>
+      console.log(response)
+    );
+
+### clase 253 - permisos
+
+cuando probamos la app en la app de expoGo no hace falta solicitar permisos.. pero para cuando publiquemos la app en las store si va hacer falta preguntar porque ya no corre en expo
+
+async function configurePushNotifications() {
+const { status } = await Notifications.getPermissionsAsync();
+let finalStatus = status;
+if (finalStatus !== "granted") {
+const { status } = await Notifications.requestPermissionsAsync();
+finalStatus = status;
+}
+if (finalStatus !== "granted") {
+Alert.alert(
+"Permiso requerido",
+"Las notificaciones necesitan permisos"
+);
+return;
+}
+const pushTokenData = await Notifications.getExpoPushTokenAsync();
+console.log(pushTokenData);
+}
+configurePushNotifications();
+
+PARA ANDROID hay que hacer unas configuraciones mas relacionadas al CHANEL por el cual se comunica android.. despues de tener el pushTokenData debemos =>
+
+if (Platform.OS === "android") {
+Notifications.setNotificationChannelAsync("default", {
+name: "default",
+importance: Notifications.AndroidImportance.DEFAULT,
+});}}
+
+### clase 254 - enviar notificaciones push
+
+servicio para enviar notificaciones push => https://expo.dev/notifications
+
+para probar si anda la recepcion de las notificaciones en el celular
+
+como generalmente esas notificaciones se van a madar desde un back.. osea con codigo
+pero el curso no tiene un back entonces probamos mandando notificaciones desde dentro de la app
+
+function pushNotificationHandler() {
+fetch("https://exp.host/--/api/v2/push/send", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({
+to: "ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]",
+title: "holaaaa",
+body: "mundillo",
+}),
+});
